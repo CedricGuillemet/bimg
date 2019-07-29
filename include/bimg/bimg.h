@@ -475,6 +475,19 @@ namespace bimg
 		);
 
 	///
+	int32_t imageWriteJpg(
+		  bx::WriterI* _writer
+		, uint32_t _width
+		, uint32_t _height
+		, uint32_t _srcPitch
+		, const void* _src
+		, TextureFormat::Enum _format
+		, bool _yflip
+		, uint8_t quality
+		, bx::Error* _err = NULL
+		);
+
+	///
 	int32_t imageWriteTga(
 		  bx::WriterI* _writer
 		, uint32_t _width

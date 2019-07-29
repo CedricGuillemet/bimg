@@ -10,6 +10,11 @@
 
 #include <bx/debug.h>
 
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb/stb_image_write.h>
+//#include "../3rdparty/stb/stb_image_write.h"
+
 namespace bimg
 {
 	static const ImageBlockInfo s_imageBlockInfo[] =
@@ -4896,6 +4901,27 @@ namespace bimg
 		return false;
 	}
 
+	void _stbi_write_func(void *context, void *data, int size)
+	{
+		bx::WriterI* _writer = (bx::WriterI*)context;
+		bx::write(_writer, data, size);
+	}
+
+	int32_t imageWriteJpg(bx::WriterI* _writer, uint32_t _width, uint32_t _height, uint32_t _srcPitch, const void* _src, TextureFormat::Enum _format, bool _yflip, uint8_t quality, bx::Error* _err)
+	{
+		int component = 3;
+		switch(_format)
+		{
+			case TextureFormat::BGRA8:
+			case TextureFormat::RGBA8:
+				component = 4;
+				break;
+			default:
+				break;
+		}
+		return stbi_write_jpg_to_func(_stbi_write_func, _writer, _width, _height, component, _src, quality);
+	}
+	
 	int32_t imageWriteTga(bx::WriterI* _writer, uint32_t _width, uint32_t _height, uint32_t _srcPitch, const void* _src, bool _grayscale, bool _yflip, bx::Error* _err)
 	{
 		BX_ERROR_SCOPE(_err);
